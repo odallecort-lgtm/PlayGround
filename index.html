@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#101510" />
+  <title>VEILFALL — The Shattered Realms</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='.9em' font-size='56'%3E%E2%9C%A6%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app">
+    <canvas id="world" aria-label="VEILFALL first-person arena"></canvas>
+    <div class="vignette"></div>
+    <div class="grain"></div>
+
+    <section id="title-screen" class="screen">
+      <header class="topbar"><div class="brand-mark">✦</div><div class="brand">VEILFALL <span>THE SHATTERED REALMS</span></div><div class="run-stamp">A ROGUELITE SPELL-SHOOTER <i>✧</i></div></header>
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> THE VEIL IS THINNING</p>
+        <h1>Stand against<br><em>the endless dark.</em></h1>
+        <p class="intro">Four paths of ancient magic. One shifting battlefield.<br>How far can your legend reach?</p>
+      </div>
+      <div class="selection-wrap">
+        <div class="section-label"><span>CHOOSE YOUR PATH</span><i>01 — 04</i></div>
+        <div id="class-grid" class="class-grid"></div>
+        <div class="selection-footer"><div class="persist-info"><span class="tiny-sigil">✧</span><span id="legacy-copy">Every run leaves a mark.</span><button id="legacy-upgrade" class="legacy-button">FORGE LEGACY <b>· 3 SHARDS</b></button></div><button id="start-run" class="primary-button">ENTER THE VEIL <b>↗</b></button></div>
+      </div>
+      <div class="title-bottom"><span>WASD MOVE <b>·</b> MOUSE AIM <b>·</b> CLICK CAST <b>·</b> Q SIGIL <b>·</b> SHIFT DASH</span><span>ONE RUN · 5–10 MIN · YOUR LEGEND PERSISTS</span></div>
+    </section>
+
+    <section id="hud" class="hidden">
+      <header class="hud-top">
+        <div class="run-info"><div class="mini-brand">✦</div><div><strong>VEILFALL</strong><small id="class-name-hud">EMBER WARDEN</small></div></div>
+        <div class="wave-info"><small>THE VEIL DEEPENS</small><strong>WAVE <span id="wave-number">01</span><i> / </i><span id="wave-total">06</span></strong><div class="wave-track"><span id="wave-progress"></span></div></div>
+        <div class="run-clock"><span class="clock-dot"></span><span id="clock">00:00</span><small>RUN TIME</small></div>
+      </header>
+      <div class="objective"><span class="obj-icon">✧</span><div><b id="objective-title">PURGE THE HOLLOW</b><small id="objective-subtitle">Defeat the lingering shades</small></div></div>
+      <div id="wave-banner" class="wave-banner"><span>WAVE I</span><b>THE VEIL STIRS</b></div>
+      <div class="crosshair"><i></i><i></i><i></i><i></i><b></b></div>
+      <div id="hit-marker" class="hit-marker">×</div>
+      <div class="bottom-hud">
+        <div class="vitals"><div class="vital-head"><span>VITALITY</span><b><span id="health-value">100</span><i> / </i>100</b></div><div class="bar"><span id="health-bar"></span></div><div class="vital-foot"><span>WARD <b id="ward-value">0</b></span><span id="combo-label">✦ &nbsp;SOULS <b id="souls-value">0</b></span></div></div>
+        <div class="ability-row"><div class="ability weapon"><span class="ability-key">LMB</span><span class="ability-glyph">✦</span><span class="ability-label"><b>ARCANE BOLT</b><small id="weapon-label">FIRE · 0.4S</small></span></div><div id="ability-sigil" class="ability"><span class="ability-key">Q</span><span class="ability-glyph">◈</span><span class="ability-label"><b id="sigil-name">CINDER RING</b><small id="sigil-state">READY</small></span><div class="cooldown-shade"></div></div><div class="ability dash"><span class="ability-key">SHIFT</span><span class="ability-glyph">➤</span><span class="ability-label"><b>VEIL STEP</b><small>SHORT DASH</small></span></div></div>
+        <div class="score-panel"><div><small>SHADES BANISHED</small><b id="kill-count">00</b></div><div class="combo-wrap"><small>BEST STREAK</small><b id="streak-count">×1</b></div></div>
+      </div>
+      <div id="minimap" class="minimap"><canvas id="map-canvas" width="120" height="120"></canvas></div>
+      <div id="toast" class="toast"></div>
+      <div id="touch-controls" class="touch-controls"><div id="joy" class="joy"><i></i><b></b></div><button id="touch-fire" aria-label="Cast spell">✦</button><button id="touch-ability" aria-label="Use ability">Q</button><button id="touch-dash" aria-label="Dash">➤</button></div>
+    </section>
+
+    <section id="upgrade-screen" class="screen modal-screen hidden">
+      <div class="modal-kicker">THE VEIL YIELDS</div><h2>A moment to <em>adapt.</em></h2><p class="modal-intro">Choose a blessing. It will echo through the next wave.</p>
+      <div id="upgrade-cards" class="upgrade-cards"></div><div class="modal-foot"><span>WAVE COMPLETE <b>✧</b></span><span>YOUR RUN CONTINUES</span></div>
+    </section>
+
+    <section id="end-screen" class="screen modal-screen hidden">
+      <div id="end-kicker" class="modal-kicker">THE VEIL REMEMBERS</div><h2 id="end-title">The dark <em>recedes.</em></h2><p id="end-copy" class="modal-intro">Your legend carries forward.</p>
+      <div class="run-summary"><div><small>WAVES CLEARED</small><b id="summary-waves">0</b></div><div><small>SHADES BANISHED</small><b id="summary-kills">0</b></div><div><small>RUN TIME</small><b id="summary-time">00:00</b></div><div><small>SHARDS WON</small><b id="summary-shards">0</b></div></div>
+      <div class="legacy-card"><span class="legacy-sigil">✧</span><div><small>LEGACY SHARDS</small><b id="legacy-total">0</b></div><p id="legacy-message">Each run makes the next one brighter.</p></div>
+      <button id="return-menu" class="primary-button">CHOOSE A NEW PATH <b>↗</b></button>
+    </section>
+    <div id="pause-overlay" class="pause-overlay hidden"><div class="modal-kicker">THE VEIL HOLDS</div><h2>Run <em>paused.</em></h2><p>Press ESC to return to the fray.</p><button id="resume-button" class="primary-button">RETURN TO BATTLE <b>↗</b></button></div>
+    <div id="damage-flash"></div>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
